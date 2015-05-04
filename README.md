@@ -12,6 +12,7 @@ The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), based on a lig
 
 * Simplicity of use. Just include the header to your project
 * Running a single or all tests cases
+* Summary of tests results in verbose output
 * Support some Qt Test runner options. For example you can have XML report 
 * Qt4 / Qt5 compatibility 
 * For Qt4 : Provide the exception thrown test (as exists in Qt5)
@@ -27,18 +28,18 @@ The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), based on a lig
 
 #include "MultiTests.hh"
 
-class TestDummy : public QObject
+class Dummy_test : public QObject
 {
     Q_OBJECT
 
 private slots:
     // Test functions
-    void showVersion(void){
+    void obviousTest(void){
        QCOMPARE(1,1);
     }
 };
 
-TEST_DECLARE(TestDummy);
+TEST_DECLARE(Dummy_test);
 
 #endif /* TESTDUMMY_HH_ */
 ```
