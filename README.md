@@ -56,6 +56,42 @@ TEST_DECLARE(Dummy_test);
 5. Repeat the step 2 for add more tests cases
 
 
+
+Example of execution : 
+```
+********* Start testing of Dummy_test *********
+Config: Using QTest library 4.8.6, Qt 4.8.6
+PASS   : Dummy_test::initTestCase()
+PASS   : Dummy_test::obviousTest()
+PASS   : Dummy_test::cleanupTestCase()
+********* Finished testing of Dummy_test *********
+********* Start testing of StylesHandler_test *********
+Config: Using QTest library 4.8.6, Qt 4.8.6
+PASS   : StylesHandler_test::initTestCase()
+FAIL!  : StylesHandler_test::totalFailure() Compared values are not the same
+   Actual (m_data->content()): In7sh4oaZj6G0gf
+   Expected (QString("153")): 153
+   Loc: [tests/StylesHandler_test.cpp(67)]
+PASS   : StylesHandler_test::styleExist()
+PASS   : StylesHandler_test::cleanupTestCase()
+Totals: 4 passed, 0 failed, 0 skipped
+********* Finished testing of StylesHandler_test *********
+********* Start testing of VarTypes_test *********
+Config: Using QTest library 4.8.6, Qt 4.8.6
+PASS   : VarTypes_test::initTestCase()
+PASS   : VarTypes_test::varUnknowUndefined()
+PASS   : VarTypes_test::varSearchValue()
+PASS   : VarTypes_test::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped
+********* Finished testing of VarTypes_test *********
+======================================== 
+======================================== 
+======= ERRORS during tests !!!   ======= 
+1 error in 1 case(s), over a total of 3 tests cases 
+Case(s) that failed :  StylesHandler_test 
+Executed in 0 seconds (49 ms)
+```
+
 ## Next steps
 
 This helpful project is still a work in progress and can be improved in many ways. 
