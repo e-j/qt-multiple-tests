@@ -37,7 +37,7 @@ install:
 script:
   - g++ --version
   - qmake --version
-  - ./tests/runAll.sh
+  - ./tests/runAll.sh --verbose
 
 notifications:
   email:
