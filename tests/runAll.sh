@@ -1,4 +1,11 @@
 #!/bin/bash
+readonly PROGNAME=$(basename $0)
+readonly PROGDIR=$(readlink -m $(dirname $0))
+readonly ARGS="$@"
+readonly ARGS_ARRAY=($@)
+
+# Constants
+readonly BIN_RUNNER=multiTestsCaseRunner
 
 testConfig(){
     # Configure bash environment for test execution
@@ -6,7 +13,7 @@ testConfig(){
 }
 
 projectClean(){
-    rm -f multiTestsCase
+    rm -f $BIN_RUNNER
 }
 projectPrepare(){
     qmake -project
@@ -17,7 +24,7 @@ projectCompile(){
     make
 }
 projectRun(){
-    ./multiTestsCase
+    ./$BIN_RUNNER
 }
 
 
