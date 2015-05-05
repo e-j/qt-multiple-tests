@@ -1,0 +1,5 @@
+obj/
+moc/
+Makefile
+*.pro
+multiTestsCaseRunner
