@@ -85,7 +85,7 @@ projectRun(){
     fi
     if [ -e "$SPECIFIC_SCRIPT" ]
     then
-        echo "=> $SPECIFIC_SCRIPT is launched"
+        echo "=> Test run by parsing results"
         ./$SPECIFIC_SCRIPT
     fi
 }
