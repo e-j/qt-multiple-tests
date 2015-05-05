@@ -13,4 +13,4 @@ lessThan(QT_MAJOR_VERSION, 5): CONFIG += qtestlib
 greaterThan(QT_MAJOR_VERSION, 4): QT += testlib widgets
 
 # For more simplicity, all targets have same name
-TARGET = multiTestsCase 
+TARGET = multiTestsCaseRunner 
