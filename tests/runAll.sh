@@ -6,6 +6,7 @@ readonly ARGS_ARRAY=($@)
 
 # Constants
 readonly BIN_RUNNER=multiTestsCaseRunner
+readonly RUNNER_OUTPUT=output.log
 
 testConfig(){
     # Configure bash environment for test execution
@@ -24,7 +25,7 @@ projectCompile(){
     make
 }
 projectRun(){
-    ./$BIN_RUNNER
+    ./$BIN_RUNNER &> $RUNNER_OUTPUT
 }
 
 
