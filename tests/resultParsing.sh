@@ -29,6 +29,11 @@ testIntEqual(){
     fi
 }
 
-parseLog(){
+logParse(){
+    # Parse log result for extract important metrics
     nbCaseStarted=`grep -o "Start testing of " output.log | wc -l`
+}
+
+logContain(){
+
 }

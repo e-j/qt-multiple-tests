@@ -7,6 +7,8 @@ readonly ARGS_ARRAY=($@)
 
 source ../resultParsing.sh
 
-parseLog
+logParse
 testIntEqual 1 $nbCaseStarted "Number of tests cases"
+
+
 exit $scriptSuccess
