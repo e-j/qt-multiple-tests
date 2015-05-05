@@ -29,7 +29,7 @@ projectRun(){
 
 
 proceedAllTests(){
-    for dir in ./*/
+    for dir in ./tests/*/
     do
         dir=${dir%*/}
         echo "== Case "${dir##*/}" == "
