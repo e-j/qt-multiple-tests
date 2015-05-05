@@ -5,7 +5,7 @@ scriptSuccess=0
 log(){
     # Log a successfull step
     # param1 : decription of step
-    echo "===> [OK]   $1"
+    echo "===> [ OK ] $1"
 }
 
 error(){
@@ -23,9 +23,8 @@ testIntEqual(){
     if [ $1 -ne $2 ]
     then
         error "$3 : expected $1, get $2"
-        exit 1
     else
-        log "$3 : (get $1)"
+        log "$3 : get $1"
     fi
 }
 
@@ -34,6 +33,14 @@ logParse(){
     nbCaseStarted=`grep -o "Start testing of " output.log | wc -l`
 }
 
-logContain(){
-
+testLogContain(){
+    # Test that the run log contain a string
+    # param1 : The string to look for
+    # param2 : Description of test
+    if grep -q -o "$1" "output.log"
+    then
+        log "$2 : log contain '$1'"
+    else
+        error "$2 : log do not contain '$1'"
+    fi
 }
