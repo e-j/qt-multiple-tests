@@ -20,6 +20,8 @@ before_install:
 - if [ "$QT_BASE" = "53" ]; then sudo add-apt-repository ppa:beineri/opt-qt532 -y; fi
 - if [ "$QT_BASE" = "54" ]; then sudo add-apt-repository ppa:beineri/opt-qt541 -y; fi
 - sudo apt-get update -qq
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
 
 install:
 - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8 gcc-4.8; fi
