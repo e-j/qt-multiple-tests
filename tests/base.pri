@@ -11,3 +11,6 @@ QMAKE_CXXFLAGS += -std=c++11
 greaterThan(QT_MAJOR_VERSION, 4): DEFINES += QT5
 lessThan(QT_MAJOR_VERSION, 5): CONFIG += qtestlib
 greaterThan(QT_MAJOR_VERSION, 4): QT += testlib widgets
+
+# For more simplicity, all targets have same name
+TARGET = multiTestsCase 
