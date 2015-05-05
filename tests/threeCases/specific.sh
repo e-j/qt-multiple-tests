@@ -9,5 +9,6 @@ source ../resultParsing.sh
 
 logParse
 testIntEqual 3 $nbCaseStarted "Number of tests cases"
+testLogContain "All tests succeed" "All test succeed"
 
 exit $scriptSuccess
