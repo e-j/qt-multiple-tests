@@ -10,13 +10,21 @@ The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), based on a lig
 
 ## Features
 
-* Simplicity of use. Just include the header to your project
-* Running a single or all tests cases
+* Simplicity of use. Just include the header `MultiTest.hh` to your project
+* Choose to run a single case or all of them (option `-case <casename>`)
 * Summary of tests results in verbose output
 * Support some Qt Test runner options. For example you can have XML report 
 * Qt4 / Qt5 compatibility 
 * For Qt4 : Provide the exception thrown test (as exists in Qt5)
-* C++11 minimum 
+
+## Requirements 
+* A Qt application in QTest mode
+    - For Qt4 : `CONFIG += qtestlib`
+    - For Qt5 : `QT += testlib widgets`
+* C++11 is enabled
+    - GCC version 4.8 minimum
+    - Set `CONFIG += c++11` and `QMAKE_CXXFLAGS += -std=c++11` into the .pro
+ 
 
 ## How to use it
 
