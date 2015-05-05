@@ -39,7 +39,7 @@ proceedAllTests(){
         projectPrepare
         projectCompile
         projectRun
-        cd ..
+        cd ../../
 
     done
 }
