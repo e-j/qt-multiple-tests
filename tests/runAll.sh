@@ -6,6 +6,7 @@ readonly ARGS_ARRAY=($@)
 
 # Constants
 readonly BIN_RUNNER=multiTestsCaseRunner
+readonly SPECIFIC_SCRIPT=specific.sh
 readonly RUNNER_OUTPUT=output.log
 
 testConfig(){
@@ -14,7 +15,7 @@ testConfig(){
 }
 
 projectClean(){
-    rm -f $BIN_RUNNER
+    rm -f $BIN_RUNNER $RUNNER_OUTPUT
 }
 projectPrepare(){
     qmake -project
@@ -26,6 +27,11 @@ projectCompile(){
 }
 projectRun(){
     ./$BIN_RUNNER &> $RUNNER_OUTPUT
+    if [ -e "$SPECIFIC_SCRIPT" ]
+    then
+        echo "=> $SPECIFIC_SCRIPT is launched"
+        ./$SPECIFIC_SCRIPT
+    fi
 }
 
 
