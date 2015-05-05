@@ -26,7 +26,8 @@ projectCompile(){
     make
 }
 projectRun(){
-    ./$BIN_RUNNER &> $RUNNER_OUTPUT
+    ./$BIN_RUNNER &> $RUNNER_OUTPUT || true
+    cat $RUNNER_OUTPUT
     if [ -e "$SPECIFIC_SCRIPT" ]
     then
         echo "=> $SPECIFIC_SCRIPT is launched"
