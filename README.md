@@ -96,7 +96,6 @@ Executed in 0 seconds (49 ms)
 
 This helpful project is still a work in progress and can be improved in many ways. 
 We can list for the more important missing features : 
-- Handling tests on that extension over Travis CI
 - Better support for XML options. Specially handle output as single well formatted XML file and as multiple XML files.
 - Run a selections of cases by repeat the `-case` options
 - Define a license for the project
