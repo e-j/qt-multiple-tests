@@ -32,3 +32,4 @@ install:
 
 script:
   - qmake --version
+  - ./tests/runAll.sh
