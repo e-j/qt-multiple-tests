@@ -10,7 +10,7 @@ The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), based on a lig
 
 ## Features
 
-* Simplicity of use. Just include the header `MultiTest.hh` to your project
+* Simplicity of use : just include the header [`MultiTests.hh`](MultiTests.hh) to your project
 * Choose to run a single case or all of them (option `-case <casename>`)
 * Summary of tests results in verbose output
 * Support some Qt Test runner options. For example you can have XML report 
@@ -28,7 +28,7 @@ The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), based on a lig
 
 ## How to use it
 
-1. Add the header file to your project
+1. Add the [`MultiTests.hh`](MultiTests.hh) file to your project
 2. Create a test case. Register it using **`TEST_DECLARE`**
     ```cpp
 #ifndef TESTDUMMY_HH_
