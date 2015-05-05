@@ -1,4 +1,4 @@
-# Qt Multiple tests
+# Qt Multiple tests [![Build Status](https://travis-ci.org/e-j/qt-multiple-tests.svg?branch=master)](https://travis-ci.org/e-j/qt-multiple-tests)
 
 ## Purpose 
 
