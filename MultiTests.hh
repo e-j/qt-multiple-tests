@@ -1,7 +1,12 @@
 #ifndef MULTITESTS_H
 #define MULTITESTS_H
 
+#if QT_VERSION >= 0x050000
 #include <QTest>
+#else
+#include <QtTest/QtTest>
+#endif
+
 #include <QList>
 #include <QString>
 #include <QSharedPointer>
@@ -42,9 +47,6 @@ namespace MultiTests {
      * @return A pointer to the QObject* test object if found, or nullptr if no object match that name
      */
     inline QObject* findTestName(QString name){
-        if( !name.endsWith("_test") ){
-            name.append("_test");
-        }
         TestCasesList& list = allTestCases();
         foreach (QObject* test, list){
             if (test->objectName() == name) {
@@ -92,7 +94,12 @@ namespace MultiTests {
         if (sl.access() != QMetaMethod::Private || sl.parameterTypes().size() != 0
                 /*|| sl.returnType() != QMetaType::Void*/ || sl.methodType() != QMetaMethod::Slot)
             return false;
-        QByteArray name = sl.methodSignature();
+        QByteArray name;
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+        name = QByteArray::fromRawData(sl.signature(),2048);
+#else
+        name = sl.methodSignature();
+#endif
         if (name.isEmpty() || name.size()<2 )
             return false;
         name.remove(name.size()-2,2);
@@ -111,7 +118,11 @@ namespace MultiTests {
         for (int i = 0; i < testObj->metaObject()->methodCount(); ++i) {
             QMetaMethod sl = testObj->metaObject()->method(i);
             if (isValidTestSlot(sl)) {
-               qDebug() << sl.methodSignature();
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+                qDebug() << sl.signature();
+#else
+                qDebug() << sl.methodSignature();
+#endif
             }
         }
     }
@@ -226,7 +237,7 @@ public:
 
 #define TEST_DECLARE(className) static MultiTests_Case<className> autoT_##className(#className);
 
-#define TEST_MAIN_NOAPP \
+#define MULTI_TESTS_MAIN_NOAPP \
 int main(int argc, char *argv[]) \
 { \
     srand (time(NULL)); \
@@ -234,7 +245,7 @@ int main(int argc, char *argv[]) \
 }
 
 
-#define TEST_MAIN \
+#define MULTI_TESTS_MAIN \
 int main(int argc, char *argv[]) \
 { \
     QApplication app(argc, argv); \
