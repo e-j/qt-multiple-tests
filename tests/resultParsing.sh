@@ -24,7 +24,7 @@ testIntEqual(){
     then
         error "$3 : expected $1, get $2"
     else
-        log "$3 : get $1"
+        log "$3 : $1"
     fi
 }
 

@@ -8,10 +8,12 @@ readonly ARGS_ARRAY=($@)
 readonly BIN_RUNNER=multiTestsCaseRunner
 readonly SPECIFIC_SCRIPT=specific.sh
 readonly RUNNER_OUTPUT=output.log
+readonly CONFIGURATION_FILENAME=test.conf
 
 testConfig(){
     # Configure bash environment for test execution
-    set -ev # Verbose mode and exit script as soon as one command fail
+    source $PROGDIR/resultParsing.sh
+    set -e # Exit script as soon as one command fail
 }
 
 usage() {
@@ -22,6 +24,7 @@ usage() {
     echo " "
     echo "Options : "
     echo "--verbose  -v : Output compilation and each of project runner"
+    echo "--clean    -c : Clean project directory before compile and after success"
 
     echo " "
     echo "--help     -h : Display this Help on usage"
@@ -37,7 +40,8 @@ cmdline() {
         case "$arg" in
             #translate --gnu-long-options to -g (short options)
             --help)           args="${args}-h ";;
-            --verbose)          args="${args}-v ";;
+            --clean)          args="${args}-c ";;
+            --verbose)        args="${args}-v ";;
             #pass through anything else
             *) [[ "${arg:0:1}" == "-" ]] || delim="\""
                 args="${args}${delim}${arg}${delim} ";;
@@ -47,7 +51,7 @@ cmdline() {
     #Reset the positional parameters to the short options
     eval set -- $args
 
-    while getopts "hv" OPTION
+    while getopts "hvc" OPTION
     do
          case $OPTION in
          h)
@@ -57,14 +61,25 @@ cmdline() {
          v)
              readonly MODE_VERBOSE=1
              ;;
+         c)
+             readonly MODE_CLEANING=1
+             ;;
         esac
     done
 
     return 0
 }
 
+echoWhenVerbose(){
+    if [[ -n $MODE_VERBOSE ]]; then
+        echo $1
+    fi
+}
+
 projectClean(){
     rm -f $BIN_RUNNER $RUNNER_OUTPUT
+    rm -f Makefile *.pro
+    rm -rf moc/ obj/
 }
 projectPrepare(){
     qmake -project
@@ -79,29 +94,75 @@ projectCompile(){
     fi
 }
 projectRun(){
-    ./$BIN_RUNNER &> $RUNNER_OUTPUT || true
+
+    echoWhenVerbose "==> Launch ./$BIN_RUNNER $runnerOptions"
+    ./$BIN_RUNNER $runnerOptions &> $RUNNER_OUTPUT || true
     if [[ -n $MODE_VERBOSE ]]; then
         cat $RUNNER_OUTPUT
     fi
-    if [ -e "$SPECIFIC_SCRIPT" ]
-    then
-        echo "=> Test run by parsing results"
-        ./$SPECIFIC_SCRIPT
+}
+
+testConfigurationUnset(){
+    runnerOptions=""
+    checkNbCases=""
+    # Pseudo-Associative map of checks for log content
+    unset checksStr
+    declare -a checksStr
+}
+
+testConfigurationLoad(){
+    echoWhenVerbose "=> Load configuration from file"
+    source $CONFIGURATION_FILENAME
+
+    local re='^[0-9]+$'
+    if ! [[ $checkNbCases =~ $re ]] ; then
+        checkNbCases="0"
     fi
 }
 
+testChecks(){
+    logParse
+
+    testIntEqual $checkNbCases $nbCaseStarted "Number of tests cases"
+
+    for currentCheckStr in "${checksStr[@]}" ; do
+        local key=${currentCheckStr%%=*}
+        local value=${currentCheckStr#*=}
+        testLogContain "$value" "$key"
+    done
+}
+
+testCurrentDir(){
+    if [ -e "$CONFIGURATION_FILENAME" ]; then
+        echo "> Case "${dir##*/}" "
+
+        testConfigurationUnset
+        testConfigurationLoad
+
+        if [[ -n $MODE_CLEANING ]]; then
+            projectClean
+        fi
+
+        projectPrepare
+        projectCompile
+        projectRun
+
+        testChecks
+
+        if [[ -n $MODE_CLEANING ]]; then
+            projectClean
+        fi
+    fi
+
+}
 
 proceedAllTests(){
     for dir in ./tests/*/
     do
         dir=${dir%*/}
-        echo "== Case "${dir##*/}" == "
 
         cd $dir
-        projectClean
-        projectPrepare
-        projectCompile
-        projectRun
+        testCurrentDir
         cd ../../
 
     done
@@ -112,6 +173,8 @@ main() {
     testConfig
 
     proceedAllTests
+
+    exit $scriptSuccess
 }
 
 main
