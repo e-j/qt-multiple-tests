@@ -109,4 +109,4 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 ## Next steps
 
 This helpful project is still a work in progress and can be improved in many ways.
-Missing features and to do work is listed into the issues.
+Missing features and to do work are listed into the issues section.
