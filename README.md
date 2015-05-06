@@ -11,7 +11,7 @@ The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), as based on a 
 ## Features
 
 * Simplicity of use : just include the header [`MultiTests.hh`](MultiTests.hh) to your project
-* Choose to run a single case or all of them (option `-case <casename>`)
+* Choose to run all or a selection of the test case (option `-case <casename>`)
 * Summary of tests results in verbose output
 * Support some Qt Test runner options. For example you can have XML report
 * Qt4 / Qt5 compatibility
