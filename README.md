@@ -1,6 +1,6 @@
 # Qt Multiple tests [![Build Status](https://travis-ci.org/e-j/qt-multiple-tests.svg?branch=master)](https://travis-ci.org/e-j/qt-multiple-tests)
 
-## Purpose 
+## Purpose
 
 The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), as based on a lightweight philosophy, don't provide any facilities for run multiple tests cases in a single application. But that's can be a very useful feature for medium size applications.
 
@@ -13,18 +13,18 @@ The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), as based on a 
 * Simplicity of use : just include the header [`MultiTests.hh`](MultiTests.hh) to your project
 * Choose to run a single case or all of them (option `-case <casename>`)
 * Summary of tests results in verbose output
-* Support some Qt Test runner options. For example you can have XML report 
-* Qt4 / Qt5 compatibility 
+* Support some Qt Test runner options. For example you can have XML report
+* Qt4 / Qt5 compatibility
 * For Qt4 : Provide the exception thrown test (as exists in Qt5)
 
-## Requirements 
+## Requirements
 * A Qt application in QTest mode
     - For Qt4 : `CONFIG += qtestlib`
     - For Qt5 : `QT += testlib widgets`
 * C++11 is enabled
     - GCC version 4.8 minimum
     - Set `CONFIG += c++11` and `QMAKE_CXXFLAGS += -std=c++11` into the .pro
- 
+
 
 ## How to use it
 
@@ -51,8 +51,8 @@ TEST_DECLARE(Dummy_test);
 
 #endif /* TESTDUMMY_HH_ */
 ```
-3. When you want to compile the unit tests, just run the **`MULTI_TESTS_MAIN`** instead of your `main` function : 
-    
+3. When you want to compile the unit tests, just run the **`MULTI_TESTS_MAIN`** instead of your `main` function :
+
     ```cpp
 #ifdef UNITTEST_MODE
     #include "MultiTests.hh"
@@ -65,7 +65,7 @@ TEST_DECLARE(Dummy_test);
 
 
 
-Example of execution : 
+Example of execution :
 ```
 ********* Start testing of Dummy_test *********
 Config: Using QTest library 4.8.6, Qt 4.8.6
@@ -92,20 +92,21 @@ PASS   : VarTypes_test::varSearchValue()
 PASS   : VarTypes_test::cleanupTestCase()
 Totals: 10 passed, 0 failed, 0 skipped
 ********* Finished testing of VarTypes_test *********
-======================================== 
-======================================== 
-======= ERRORS during tests !!!   ======= 
-1 error in 1 case(s), over a total of 3 tests cases 
-Case(s) that failed :  StylesHandler_test 
+========================================
+========================================
+======= ERRORS during tests !!!   =======
+1 error in 1 case(s), over a total of 3 tests cases
+Case(s) that failed :  StylesHandler_test
 Executed in 0 seconds (49 ms)
 ```
 
+## License
+
+This project is under LGPLv3.
+See the [LICENSE](LICENSE.md) file for license rights and limitations
+
+
 ## Next steps
 
-This helpful project is still a work in progress and can be improved in many ways. 
-We can list for the more important missing features : 
-- Better support for XML options. Specially handle output as single well formatted XML file and as multiple XML files.
-- Run a selections of cases by repeat the `-case` options
-- Define a license for the project
-
-
+This helpful project is still a work in progress and can be improved in many ways.
+Missing features and to do work is listed into the issues.
