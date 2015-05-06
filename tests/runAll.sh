@@ -8,10 +8,12 @@ readonly ARGS_ARRAY=($@)
 readonly BIN_RUNNER=multiTestsCaseRunner
 readonly SPECIFIC_SCRIPT=specific.sh
 readonly RUNNER_OUTPUT=output.log
+readonly CONFIGURATION_FILENAME=test.conf
 
 testConfig(){
     # Configure bash environment for test execution
-    set -ev # Verbose mode and exit script as soon as one command fail
+    source $PROGDIR/resultParsing.sh
+    set -e # Exit script as soon as one command fail
 }
 
 usage() {
@@ -68,6 +70,12 @@ cmdline() {
     return 0
 }
 
+echoWhenVerbose(){
+    if [[ -n $MODE_VERBOSE ]]; then
+        echo $1
+    fi
+}
+
 projectClean(){
     rm -f $BIN_RUNNER $RUNNER_OUTPUT
     rm -f Makefile *.pro
@@ -86,34 +94,75 @@ projectCompile(){
     fi
 }
 projectRun(){
-    ./$BIN_RUNNER &> $RUNNER_OUTPUT || true
+
+    echoWhenVerbose "==> Launch ./$BIN_RUNNER $runnerOptions"
+    ./$BIN_RUNNER $runnerOptions &> $RUNNER_OUTPUT || true
     if [[ -n $MODE_VERBOSE ]]; then
         cat $RUNNER_OUTPUT
     fi
-    if [ -e "$SPECIFIC_SCRIPT" ]
-    then
-        echo "=> Test run by parsing results"
-        ./$SPECIFIC_SCRIPT
+}
+
+testConfigurationUnset(){
+    runnerOptions=""
+    checkNbCases=""
+    # Pseudo-Associative map of checks for log content
+    unset checksStr
+    declare -a checksStr
+}
+
+testConfigurationLoad(){
+    echoWhenVerbose "=> Load configuration from file"
+    source $CONFIGURATION_FILENAME
+
+    local re='^[0-9]+$'
+    if ! [[ $checkNbCases =~ $re ]] ; then
+        checkNbCases="0"
     fi
 }
 
+testChecks(){
+    logParse
+
+    testIntEqual $checkNbCases $nbCaseStarted "Number of tests cases"
+
+    for currentCheckStr in "${checksStr[@]}" ; do
+        local key=${currentCheckStr%%=*}
+        local value=${currentCheckStr#*=}
+        testLogContain "$value" "$key"
+    done
+}
+
+testCurrentDir(){
+    if [ -e "$CONFIGURATION_FILENAME" ]; then
+        echo "> Case "${dir##*/}" "
+
+        testConfigurationUnset
+        testConfigurationLoad
+
+        if [[ -n $MODE_CLEANING ]]; then
+            projectClean
+        fi
+
+        projectPrepare
+        projectCompile
+        projectRun
+
+        testChecks
+
+        if [[ -n $MODE_CLEANING ]]; then
+            projectClean
+        fi
+    fi
+
+}
 
 proceedAllTests(){
     for dir in ./tests/*/
     do
         dir=${dir%*/}
-        echo "== Case "${dir##*/}" == "
 
         cd $dir
-        if [[ -n $MODE_CLEANING ]]; then
-            projectClean
-        fi
-        projectPrepare
-        projectCompile
-        projectRun
-        if [[ -n $MODE_CLEANING ]]; then
-            projectClean
-        fi
+        testCurrentDir
         cd ../../
 
     done
@@ -124,6 +173,8 @@ main() {
     testConfig
 
     proceedAllTests
+
+    exit $scriptSuccess
 }
 
 main
