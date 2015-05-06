@@ -11,6 +11,6 @@ logParse
 testIntEqual 3 $nbCaseStarted "Number of tests cases"
 testLogContain "ERRORS during tests" "Error detected"
 testLogContain "2 error in 2 case(s), over a total of 3 tests cases" "Error count"
-testLogContain "Case(s) that failed :  SecondCase_test / ThirdCase_test " "Detect failing cases"
+testLogContain "Case(s) that failed :  SecondCase_test / ThirdCase_test" "Detect failing cases"
 
 exit $scriptSuccess
