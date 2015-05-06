@@ -22,6 +22,7 @@ usage() {
     echo " "
     echo "Options : "
     echo "--verbose  -v : Output compilation and each of project runner"
+    echo "--clean    -c : Clean project directory before compile and after success"
 
     echo " "
     echo "--help     -h : Display this Help on usage"
@@ -37,7 +38,8 @@ cmdline() {
         case "$arg" in
             #translate --gnu-long-options to -g (short options)
             --help)           args="${args}-h ";;
-            --verbose)          args="${args}-v ";;
+            --clean)          args="${args}-c ";;
+            --verbose)        args="${args}-v ";;
             #pass through anything else
             *) [[ "${arg:0:1}" == "-" ]] || delim="\""
                 args="${args}${delim}${arg}${delim} ";;
@@ -47,7 +49,7 @@ cmdline() {
     #Reset the positional parameters to the short options
     eval set -- $args
 
-    while getopts "hv" OPTION
+    while getopts "hvc" OPTION
     do
          case $OPTION in
          h)
@@ -57,6 +59,9 @@ cmdline() {
          v)
              readonly MODE_VERBOSE=1
              ;;
+         c)
+             readonly MODE_CLEANING=1
+             ;;
         esac
     done
 
@@ -65,6 +70,8 @@ cmdline() {
 
 projectClean(){
     rm -f $BIN_RUNNER $RUNNER_OUTPUT
+    rm -f Makefile *.pro
+    rm -rf moc/ obj/
 }
 projectPrepare(){
     qmake -project
@@ -98,10 +105,15 @@ proceedAllTests(){
         echo "== Case "${dir##*/}" == "
 
         cd $dir
-        projectClean
+        if [[ -n $MODE_CLEANING ]]; then
+            projectClean
+        fi
         projectPrepare
         projectCompile
         projectRun
+        if [[ -n $MODE_CLEANING ]]; then
+            projectClean
+        fi
         cd ../../
 
     done
