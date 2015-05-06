@@ -4,7 +4,7 @@
 
 The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), as based on a lightweight philosophy, don't provide any facilities for run multiple tests cases in a single application. But that's can be a very useful feature for medium size applications.
 
-**Qt Multiple tests** provide an easy solution : include an additionnal header and you are able to create several tests cases in your test suite. A single binary will allow to run one or all test cases. Reporting and re-run test is simplified. Parsing unit tests results will be simplified for external tools (*Eclipse C/C++ Unit Tests runner* for example)
+**Qt Multiple tests** provide an easy solution : include an additionnal header and you are able to create several tests cases in your test suite. A single binary will allow to run one or all test cases. Reporting and re-run test is simplified. Parsing unit tests results will be simplified for external tools (IDE, continuous integration)
 
 **Qt Multiple tests** is a rework on a original example provided by Rob Caldecott in his two of his posts : [Running Multiple Unit Tests ](http://qtcreator.blogspot.fr/2009/10/running-multiple-unit-tests.html) and [Sample Multiple Unit Test Project ](http://qtcreator.blogspot.fr/2010/04/sample-multiple-unit-test-project.html).
 
