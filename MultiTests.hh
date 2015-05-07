@@ -110,10 +110,10 @@ namespace MultiTests {
         return true;
     }
     /**
-     * @brief List all test function of an object
+     * @brief List all test function of a case
      * @param testObj - Pointer to the test object to list
      */
-    inline void listFunctionsTest(QObject * testObj){
+    inline void listTestFunctionsFromCase(QObject * testObj){
         qDebug() << "==" << qPrintable(testObj->objectName()) <<"==";
         for (int i = 0; i < testObj->metaObject()->methodCount(); ++i) {
             QMetaMethod sl = testObj->metaObject()->method(i);
@@ -184,7 +184,7 @@ namespace MultiTests {
         int ret = 0;
         QStringList failedTestCase;
         TestCasesList casesToRun;
-        QStringList argsList = argumentsToList(argc,argv);
+        QStringList arguments = argumentsToList(argc,argv);
 
 #if QT_VERSION >= 0x050000
         qApp->setAttribute(Qt::AA_Use96Dpi, true);
@@ -192,19 +192,19 @@ namespace MultiTests {
 
 
         QDateTime start = QDateTime::currentDateTime();
-        casesToRun = selectTestCasesToRun(argsList);
+        casesToRun = selectTestCasesToRun(arguments);
 
         // If option -functions, need a global running
-        if( argsList.contains("-functions") ){
+        if( arguments.contains("-functions") ){
             foreach (QObject* test, casesToRun){
-                listFunctionsTest(test);
+                listTestFunctionsFromCase(test);
             }
             return 0;
         }
 
         foreach (QObject* test,casesToRun){
             try {
-                int currentNbError = QTest::qExec(test,argsList);
+                int currentNbError = QTest::qExec(test,arguments);
                 if( currentNbError>0 ){
                     ret+= currentNbError;
                     failedTestCase.append( test->objectName() );
