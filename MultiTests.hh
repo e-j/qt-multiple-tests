@@ -46,7 +46,7 @@ namespace MultiTests {
      * @param name - The test name to look upon for
      * @return A pointer to the QObject* test object if found, or nullptr if no object match that name
      */
-    inline QObject* findTestName(QString name){
+    inline QObject* findTestByName(QString name){
         TestCasesList& list = allTestCases();
         foreach (QObject* test, list){
             if (test->objectName() == name) {
@@ -134,11 +134,47 @@ namespace MultiTests {
      * @return A QStringList of arguments
      */
     inline QStringList argumentsToList(int argc, char *argv[]) {
-        QStringList argsList;
+        QStringList argumentsList;
         for(int argIndex=0;argIndex<argc;argIndex++ ){
-            argsList.append( argv[argIndex] );
+            argumentsList.append( argv[argIndex] );
         }
-        return argsList;
+        return argumentsList;
+    }
+
+    /**
+     * @brief Select the cases to run this session (based on the -case arguments)
+     * @param arguments - Reference to the list of arguments
+     * @return The TestCaseList of cases to run
+     */
+    inline TestCasesList selectTestCasesToRun(QStringList& arguments){
+        TestCasesList selectedCases;
+        int argCaseIndex = 0;
+        if( argContain(arguments,"-case",&argCaseIndex) && (argCaseIndex+1)<arguments.size() ){
+            // At least one Argument "-case" specify a test case for run only it
+            while( argContain(arguments,"-case",&argCaseIndex) && (argCaseIndex+1)<arguments.size() ){
+                QString testNameToRun = arguments.at(argCaseIndex+1);
+                QObject * specifiedTest = findTestByName(testNameToRun);
+                if( specifiedTest!=nullptr ){
+                    arguments.removeAt(argCaseIndex);
+                    arguments.removeAt(argCaseIndex);
+                    selectedCases.append( specifiedTest );
+                }
+                else{
+                    qCritical() << "Cannot find any test case called "<<testNameToRun;
+                    qCritical() << "Available test cases are : ";
+                    foreach (QObject* test,allTestCases() ){
+                        qCritical() << "- " << test->objectName();
+                    }
+                    return TestCasesList();
+                }
+            }
+
+        }
+        else{
+            // Run all registered tests
+            selectedCases = allTestCases();
+        }
+        return selectedCases;
     }
 
     /**
@@ -146,9 +182,8 @@ namespace MultiTests {
      */
     inline int run(int argc, char *argv[]) {
         int ret = 0;
-        int argCaseIndex = 0;
         QStringList failedTestCase;
-        TestCasesList testsToRun;
+        TestCasesList casesToRun;
         QStringList argsList = argumentsToList(argc,argv);
 
 #if QT_VERSION >= 0x050000
@@ -157,42 +192,17 @@ namespace MultiTests {
 
 
         QDateTime start = QDateTime::currentDateTime();
-
-        if( argContain(argsList,"-case",&argCaseIndex) && (argCaseIndex+1)<argsList.size() ){
-            // At least one Argument "-case" specify a test case for run only it
-            while( argContain(argsList,"-case",&argCaseIndex) && (argCaseIndex+1)<argsList.size() ){
-                QString testNameToRun = argsList.at(argCaseIndex+1);
-                QObject * specifiedTest = findTestName(testNameToRun);
-                if( specifiedTest!=nullptr ){
-                    argsList.removeAt(argCaseIndex);
-                    argsList.removeAt(argCaseIndex);
-                    testsToRun.append( specifiedTest );
-                }
-                else{
-                    qCritical() << "Cannot find any test case called "<<testNameToRun;
-                    qCritical() << "Available test cases are : ";
-                    foreach (QObject* test,allTestCases() ){
-                        qCritical() << "- " << test->objectName();
-                    }
-                    return 1;
-                }
-            }
-
-        }
-        else{
-            // Run all registered tests
-            testsToRun = allTestCases();
-        }
+        casesToRun = selectTestCasesToRun(argsList);
 
         // If option -functions, need a global running
         if( argsList.contains("-functions") ){
-            foreach (QObject* test, testsToRun){
+            foreach (QObject* test, casesToRun){
                 listFunctionsTest(test);
             }
             return 0;
         }
 
-        foreach (QObject* test,testsToRun){
+        foreach (QObject* test,casesToRun){
             try {
                 int currentNbError = QTest::qExec(test,argsList);
                 if( currentNbError>0 ){
@@ -214,15 +224,16 @@ namespace MultiTests {
             qCritical() << "======= ERRORS during tests !!!   =======";
             qCritical() << qPrintable(
                                 QString("%1 error in %2 case(s), over a total of %3 tests cases")
-                                .arg(ret).arg(failedTestCase.size()).arg(testsToRun.size()));
+                                .arg(ret).arg(failedTestCase.size()).arg(casesToRun.size()));
             qCritical() << "Case(s) that failed : " << qPrintable(failedTestCase.join(" / "));
         }
         else{
             qWarning() << qPrintable(
-                    QString("======= All tests succeed (%1 tests cases)  =======").arg(testsToRun.size()));
+                    QString("======= All tests succeed (%1 tests cases)  =======").arg(casesToRun.size()));
         }
         qWarning() << qPrintable(
-                QString("Executed in %1 seconds (%2 ms)").arg(nbSecs).arg(nbMsecs));
+                QString("Executed in %1 seconds (%2 ms)").arg(nbSecs).arg(nbMsecs)
+                );
 
         return ret;
     }
