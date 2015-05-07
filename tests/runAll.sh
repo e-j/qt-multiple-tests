@@ -80,6 +80,7 @@ projectClean(){
     rm -f $BIN_RUNNER $RUNNER_OUTPUT
     rm -f Makefile *.pro
     rm -rf moc/ obj/
+    rm -rf *.log *.out
 }
 projectPrepare(){
     qmake -project
