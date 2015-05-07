@@ -3,4 +3,4 @@ moc/
 Makefile
 *.pro
 multiTestsCaseRunner
-output.log
+*.log
