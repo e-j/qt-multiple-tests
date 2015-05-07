@@ -89,9 +89,9 @@ projectPrepare(){
 }
 projectCompile(){
     if [[ -n $MODE_VERBOSE ]]; then
-        make
+        make -j4
     else
-        make 1> /dev/null
+        make -j4 1> /dev/null
     fi
 }
 projectRun(){
