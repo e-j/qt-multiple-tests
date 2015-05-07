@@ -128,15 +128,28 @@ namespace MultiTests {
     }
 
     /**
+     * @brief Transform the C arguments list style to a QStringList
+     * @param argc - Count of arguments
+     * @param argv - Array of arguments
+     * @return A QStringList of arguments
+     */
+    inline QStringList argumentsToList(int argc, char *argv[]) {
+        QStringList argsList;
+        for(int argIndex=0;argIndex<argc;argIndex++ ){
+            argsList.append( argv[argIndex] );
+        }
+        return argsList;
+    }
+
+    /**
      * @brief Run tests cases depending on some command lines options
      */
     inline int run(int argc, char *argv[]) {
         int ret = 0;
         int argCaseIndex = 0;
-        int nbTestClass = 0;
         QStringList failedTestCase;
         TestCasesList testsToRun;
-        QStringList argsList;
+        QStringList argsList = argumentsToList(argc,argv);
 
 #if QT_VERSION >= 0x050000
         qApp->setAttribute(Qt::AA_Use96Dpi, true);
@@ -144,13 +157,9 @@ namespace MultiTests {
 
 
         QDateTime start = QDateTime::currentDateTime();
-        for(int argIndex=0;argIndex<argc;argIndex++ ){
-            argsList.append( argv[argIndex] );
-        }
 
         if( argContain(argsList,"-case",&argCaseIndex) && (argCaseIndex+1)<argsList.size() ){
             // At least one Argument "-case" specify a test case for run only it
-
             while( argContain(argsList,"-case",&argCaseIndex) && (argCaseIndex+1)<argsList.size() ){
                 QString testNameToRun = argsList.at(argCaseIndex+1);
                 QObject * specifiedTest = findTestName(testNameToRun);
@@ -194,7 +203,6 @@ namespace MultiTests {
             catch(...){
                 ret++;
             }
-            nbTestClass++;
         }
 
         int nbMsecs = start.msecsTo( QDateTime::currentDateTime() );
@@ -206,12 +214,12 @@ namespace MultiTests {
             qCritical() << "======= ERRORS during tests !!!   =======";
             qCritical() << qPrintable(
                                 QString("%1 error in %2 case(s), over a total of %3 tests cases")
-                                .arg(ret).arg(failedTestCase.size()).arg(nbTestClass));
+                                .arg(ret).arg(failedTestCase.size()).arg(testsToRun.size()));
             qCritical() << "Case(s) that failed : " << qPrintable(failedTestCase.join(" / "));
         }
         else{
             qWarning() << qPrintable(
-                    QString("======= All tests succeed (%1 tests cases)  =======").arg(nbTestClass));
+                    QString("======= All tests succeed (%1 tests cases)  =======").arg(testsToRun.size()));
         }
         qWarning() << qPrintable(
                 QString("Executed in %1 seconds (%2 ms)").arg(nbSecs).arg(nbMsecs));
