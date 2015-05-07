@@ -14,6 +14,10 @@
 #include <QMetaObject>
 #include <QMetaMethod>
 
+#ifndef nullptr
+// If C++ is not C++11 compatible
+#define nullptr 0
+#endif
 
 namespace MultiTests {
     typedef QList<QObject*> TestCasesList;
