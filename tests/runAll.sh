@@ -108,6 +108,9 @@ testConfigurationUnset(){
     # Pseudo-Associative map of checks for log content
     unset checksStr
     declare -a checksStr
+    # Pseudo-Associative map of checks for file exists
+    unset checksFileExist
+    declare -a checksFileExist
 }
 
 testConfigurationLoad(){
@@ -129,6 +132,12 @@ testChecks(){
         local key=${currentCheckStr%%=*}
         local value=${currentCheckStr#*=}
         testLogContain "$value" "$key"
+    done
+
+    for currentCheckFileExist in "${checksFileExist[@]}" ; do
+        local key=${currentCheckFileExist%%=*}
+        local value=${currentCheckFileExist#*=}
+        testFileExist "$value" "$key"
     done
 }
 
