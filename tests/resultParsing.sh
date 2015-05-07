@@ -44,3 +44,15 @@ testLogContain(){
         error "$2 : log do not contain '$1'"
     fi
 }
+
+testFileExist(){
+    # Test that a file exist
+    # param1 : The file name
+    # param2 : Description of test
+    if [ -e "$1" ]
+    then
+        log "$2 : File '$1' exist"
+    else
+        error "$2 : File '$1' do not exist"
+    fi
+}
