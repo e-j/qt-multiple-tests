@@ -4,3 +4,4 @@ Makefile
 *.pro
 multiTestsCaseRunner
 *.log
+*.out
