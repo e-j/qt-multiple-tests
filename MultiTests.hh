@@ -70,15 +70,16 @@ namespace MultiTests {
      * @brief Know if run arguments of program contain an arguments
      * @param args - List of arguments
      * @param argToFind - The argument to find into all arguments
-     * @param argIndex - Optional pointer to retrieve the index of list where argument was found
+     * @param argIndex - Reference to retrieve the index of list where argument was found
+     * @param startIndex - The index to start the search, default is 0
      * @return TRUE if arguments is find, FALSE else
      */
-    inline bool argContain(QStringList args,QString argToFind,int * argIndex = nullptr){
+    inline bool argContain(QStringList args,QString argToFind,int& argIndex,
+                            int startIndex = 0){
 
-        if( args.contains(argToFind) ){
-            if( argIndex!=nullptr ){
-                *argIndex = args.indexOf(argToFind);
-            }
+        int tempIndex = args.indexOf(argToFind,startIndex);
+        if( tempIndex!=-1 ){
+            argIndex = tempIndex;
             return true;
         }
         return false;
@@ -149,9 +150,9 @@ namespace MultiTests {
     inline TestCasesList selectTestCasesToRun(QStringList& arguments){
         TestCasesList selectedCases;
         int argCaseIndex = 0;
-        if( argContain(arguments,"-case",&argCaseIndex) && (argCaseIndex+1)<arguments.size() ){
+        if( argContain(arguments,"-case",argCaseIndex) && (argCaseIndex+1)<arguments.size() ){
             // At least one Argument "-case" specify a test case for run only it
-            while( argContain(arguments,"-case",&argCaseIndex) && (argCaseIndex+1)<arguments.size() ){
+            while( argContain(arguments,"-case",argCaseIndex) && (argCaseIndex+1)<arguments.size() ){
                 QString testNameToRun = arguments.at(argCaseIndex+1);
                 QObject * specifiedTest = findTestByName(testNameToRun);
                 if( specifiedTest!=nullptr ){
@@ -178,10 +179,43 @@ namespace MultiTests {
     }
 
     /**
+     * @brief Update the output filename (-o or --output argument)
+     * @param arguments - Reference to the list of arguments
+     * @param caseIndex - Index of current case test
+     */
+    inline void updateOutputFile(QStringList& arguments,int caseIndex){
+        int argIndex = 0;
+        while( argContain(arguments,"-o",argIndex,argIndex) &&
+                                        (argIndex+1)<arguments.size() ){
+            QString oldFilename = arguments.at(argIndex+1);
+            QString newFilename;
+            if( oldFilename.contains(".") ){
+                // Insert suffix before file extension
+                newFilename = oldFilename.left( oldFilename.lastIndexOf(".") );
+            }
+            if( newFilename.contains(QRegExp(".*_\\d+$")) ){
+                // File seem to already have a digital suffix
+                newFilename = newFilename.left( newFilename.lastIndexOf("_") );
+            }
+            // Add new suffix
+            newFilename.append(QString("_%1")
+                            .arg(caseIndex,4,10,QChar('0')));
+            if( oldFilename.contains(".") ){
+                // Add back the extension
+                newFilename.append(oldFilename.mid( oldFilename.lastIndexOf(".") ) );
+            }
+            // Update the filename
+            arguments[argIndex+1] = newFilename;
+            argIndex+=2;
+        }
+    }
+
+    /**
      * @brief Run tests cases depending on some command lines options
      */
     inline int run(int argc, char *argv[]) {
         int ret = 0;
+        int caseIndex = 0;
         QStringList failedTestCase;
         TestCasesList casesToRun;
         QStringList arguments = argumentsToList(argc,argv);
@@ -213,6 +247,8 @@ namespace MultiTests {
             catch(...){
                 ret++;
             }
+            caseIndex++;
+            updateOutputFile(arguments,caseIndex);
         }
 
         int nbMsecs = start.msecsTo( QDateTime::currentDateTime() );
