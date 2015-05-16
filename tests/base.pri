@@ -9,7 +9,7 @@ isEmpty(_QT_BASE){
   message("_QT_BASE is empty")
 }
 else {
-  message("_QT_BASE = $_QT_BASE")
+  message("_QT_BASE = $(_QT_BASE) ")
 }
 isEmpty( $(QT_BASE) ){
   message("$ is empty")
