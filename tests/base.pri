@@ -4,7 +4,7 @@ RCC_DIR = ./rcc
 OBJECTS_DIR = ./obj
 
 # C++11 options
-_QT_BASE = $(QT_BASE)
+_QT_BASE="$$(QT_BASE)"
 
 message("_QT_BASE = $_QT_BASE ")
 message("$ = $(QT_BASE)")
