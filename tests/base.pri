@@ -13,12 +13,21 @@ message("££ = $$(QT_BASE)")
 isEmpty(_QT_BASE){
   message("_QT_BASE is empty")
 }
-isEmpty( $(QT_BASE) ){
+isEmpty( "$(QT_BASE)" ){
   message("$ is empty")
 }
-isEmpty( $$(QT_BASE) ){
+isEmpty( "$$(QT_BASE)" ){
   message("££ is empty")
 }
+
+
+equals( "$$(QT_BASE)", "48cpp98") {
+  message("££ is equal to 48cpp98")
+}
+!equals( "$$(QT_BASE)", "48cpp98") {
+  message("££ is not equal to 48cpp98")
+}
+
 
 !equals( "$$(QT_BASE)", "48cpp98") {
 #!system( g++ --version | grep -e "4\.6.[0-9]" ) {
