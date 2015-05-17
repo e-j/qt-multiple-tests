@@ -6,47 +6,13 @@ OBJECTS_DIR = ./obj
 # C++11 options
 _QT_BASE=$$(QT_BASE)
 
-message("_QT_BASE = $_QT_BASE ")
-message("$ = $(QT_BASE)")
-message("££ = $$(QT_BASE)")
-
-isEmpty(_QT_BASE){
-  message("_QT_BASE is empty")
-}
-isEmpty( "$(QT_BASE)" ){
-  message("$ is empty")
-}
-isEmpty( "$$(QT_BASE)" ){
-  message("££ is empty")
-}
-
-
-equals( "$$(QT_BASE)", "48cpp98") {
-  message("££ is equal to 48cpp98")
-}
-!equals( "$$(QT_BASE)", "48cpp98") {
-  message("££ is not equal to 48cpp98")
-}
-
-equals( $_QT_BASE, "48cpp98") {
-  message("$ Local is equal to 48cpp98")
-}
-!equals( $_QT_BASE, "48cpp98") {
-  message("$ Local is not equal to 48cpp98")
-}
-
 equals( _QT_BASE, "48cpp98") {
-  message("Local is equal to 48cpp98")
+  message("Configuration for C++98 (QT_BASE is '$$(QT_BASE)' )")
 }
 !equals( _QT_BASE, "48cpp98") {
-  message("Local is not equal to 48cpp98")
-}
-
-
-!equals( "$$(QT_BASE)", "48cpp98") {
-#!system( g++ --version | grep -e "4\.6.[0-9]" ) {
-    CONFIG += c++11
-    QMAKE_CXXFLAGS += -std=c++11
+  message("Configuration for C++11 (QT_BASE is '$$(QT_BASE)' )")
+  CONFIG += c++11
+  QMAKE_CXXFLAGS += -std=c++11
 }
 
 # Flag Qt Version
