@@ -4,7 +4,7 @@ RCC_DIR = ./rcc
 OBJECTS_DIR = ./obj
 
 # C++11 options
-_QT_BASE="$$(QT_BASE)"
+_QT_BASE=$$(QT_BASE)
 
 message("_QT_BASE = $_QT_BASE ")
 message("$ = $(QT_BASE)")
@@ -29,12 +29,18 @@ equals( "$$(QT_BASE)", "48cpp98") {
 }
 
 equals( $_QT_BASE, "48cpp98") {
-  message("Local is equal to 48cpp98")
+  message("$ Local is equal to 48cpp98")
 }
 !equals( $_QT_BASE, "48cpp98") {
-  message("Local is not equal to 48cpp98")
+  message("$ Local is not equal to 48cpp98")
 }
 
+equals( _QT_BASE, "48cpp98") {
+  message("Local is equal to 48cpp98")
+}
+!equals( _QT_BASE, "48cpp98") {
+  message("Local is not equal to 48cpp98")
+}
 
 
 !equals( "$$(QT_BASE)", "48cpp98") {
