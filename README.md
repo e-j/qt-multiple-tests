@@ -22,9 +22,6 @@ The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), as based on a 
 * A Qt application in QTest mode
     - For Qt4 : `CONFIG += qtestlib`
     - For Qt5 : `QT += testlib widgets`
-* C++11 is enabled
-    - GCC version 4.8 minimum
-    - Set `CONFIG += c++11` and `QMAKE_CXXFLAGS += -std=c++11` into the .pro
 
 
 ## How to use it
