@@ -53,7 +53,7 @@ namespace MultiTests {
     inline QObject* findTestByName(QString name){
         TestCasesList& list = allTestCases();
         foreach (QObject* test, list){
-            if (test->objectName() == name) {
+            if (test->metaObject()->className() == name) {
                 return test;
             }
         }
@@ -119,7 +119,7 @@ namespace MultiTests {
      * @param testObj - Pointer to the test object to list
      */
     inline void listTestFunctionsFromCase(QObject * testObj){
-        qDebug() << "==" << qPrintable(testObj->objectName()) <<"==";
+        qDebug() << "==" << qPrintable(testObj->metaObject()->className()) <<"==";
         for (int i = 0; i < testObj->metaObject()->methodCount(); ++i) {
             QMetaMethod sl = testObj->metaObject()->method(i);
             if (isValidTestSlot(sl)) {
@@ -168,7 +168,7 @@ namespace MultiTests {
                     qCritical() << "Cannot find any test case called "<<testNameToRun;
                     qCritical() << "Available test cases are : ";
                     foreach (QObject* test,allTestCases() ){
-                        qCritical() << "- " << test->objectName();
+                        qCritical() << "- " << test->metaObject()->className();
                     }
                     return TestCasesList();
                 }
@@ -245,7 +245,7 @@ namespace MultiTests {
                 int currentNbError = QTest::qExec(test,arguments);
                 if( currentNbError>0 ){
                     ret+= currentNbError;
-                    failedTestCase.append( test->objectName() );
+                    failedTestCase.append( test->metaObject()->className() );
                 }
             }
             catch(...){
