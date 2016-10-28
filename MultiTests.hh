@@ -38,7 +38,7 @@ namespace MultiTests {
             return true;
         }
         foreach (QObject* test, list){
-            if (test->objectName() == object->objectName()) {
+            if (test->metaObject()->className() == object->metaObject()->className()) {
                 return true;
             }
         }
@@ -65,9 +65,8 @@ namespace MultiTests {
      * @param object - Pointer to object to add to list
      */
     inline void addTest(QObject* object) {
-        TestCasesList& list = allTestCases();
         if (!findObject(object)) {
-            list.append(object);
+            allTestCases().append(object);
         }
     }
     /**
