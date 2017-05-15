@@ -249,6 +249,7 @@ namespace MultiTests {
             }
             catch(...){
                 ret++;
+                failedTestCase.append( test->metaObject()->className() );
             }
             caseIndex++;
             updateOutputFile(arguments,caseIndex);
