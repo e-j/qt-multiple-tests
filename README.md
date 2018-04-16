@@ -28,7 +28,8 @@ The [Qt Test library](http://doc.qt.io/qt-5/qtest-overview.html), as based on a 
 
 1. Add the [`MultiTests.hh`](MultiTests.hh) file to your project
 2. Create a test case. Register it using **`TEST_DECLARE`**
-    ```cpp
+
+```cpp
 #ifndef TESTDUMMY_HH_
 #define TESTDUMMY_HH_
 
@@ -49,9 +50,10 @@ TEST_DECLARE(Dummy_test);
 
 #endif /* TESTDUMMY_HH_ */
 ```
+
 3. When you want to compile the unit tests, just run the **`MULTI_TESTS_MAIN`** instead of your `main` function :
 
-    ```cpp
+```cpp
 #ifdef UNITTEST_MODE
     #include "MultiTests.hh"
     MULTI_TESTS_MAIN
@@ -62,8 +64,8 @@ TEST_DECLARE(Dummy_test);
 5. Repeat the step 2 for add more tests cases
 
 
-
 Example of execution :
+
 ```
 ********* Start testing of Dummy_test *********
 Config: Using QTest library 4.8.6, Qt 4.8.6
