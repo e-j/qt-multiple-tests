@@ -14,6 +14,10 @@ class SecondCase_test : public QObject{
         void anotherFailure(void){
             QFAIL("test");
         }
+        void doubleFailure(void){
+            QFAIL("failure1");
+            QFAIL("failure2 should never be run");
+        }
 };
 
 TEST_DECLARE(SecondCase_test);
